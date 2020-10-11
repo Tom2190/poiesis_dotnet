@@ -4,7 +4,7 @@ using System.Text;
 
 namespace poiesis_api.Models
 {
-    class Texto
+    public partial class Texto
     {
 
         public int idTexto { get; set;}
@@ -12,6 +12,8 @@ namespace poiesis_api.Models
         public DateTime fechaPublicacion { get; set; }
         public String titulo { get; set; }
         public String contenido { get; set; }
+
+        public virtual Usuario Usuario { get; set; }
 
     }
 }

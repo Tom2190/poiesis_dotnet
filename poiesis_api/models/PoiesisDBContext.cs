@@ -1,15 +1,24 @@
 ﻿using System;
-//using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
 
-namespace PruebaEFCore.Models
+namespace poiesis_api.Models
 {
-    public partial class PoiesisDBContext : DbContext
+
+public class MyContext : DbContext
+{
+    public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<Texto> Textos { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        public PoiesisDBContext()
-        {
-        }
-
-
+        optionsBuilder
+            .UseSqlite(@"Data Source=PoiesisDB.db;");
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Usuario>().ToTable("Usuarios");
+        modelBuilder.Entity<Texto>().ToTable("Textos");
+    }
+}
 }
