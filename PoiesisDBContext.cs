@@ -1,20 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace poiesis_api.Models
+namespace poiesis_api
 {
     public partial class PoiesisDBContext : DbContext
     {
-        public PoiesisDBContext()
-        {
-        }
 
-        public PoiesisDBContext(DbContextOptions<PoiesisDBContext> options)
-            : base(options)
-        {
-        }
-        public virtual DbSet<Texto> Texto { get; set; }
+        public virtual DbSet<Texto> Textos { get; set; }
+        public virtual DbSet<Usuario> Usuarios { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -22,21 +15,29 @@ namespace poiesis_api.Models
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer("Server=localhost;Database=PoiesisDB;User=sa;Password=hola1234;");
+                // optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=SchoolDB;Trusted_Connection=True;");
             }
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Texto>(entity =>
             {
-                entity.HasKey(e => e.idTexto);
+                entity.HasKey(i => i.idTexto);
 
-                entity.Property(e => e.idTexto)
-                    .HasColumnName("IDTexto")
-                    .ValueGeneratedNever();
-
-   
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.Texto)
+                    .HasForeignKey(d => d.idUsuario)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Texto_Usuario");
             });
+
+
+            modelBuilder.Entity<Usuario>(entity =>
+            {
+
+                entity.HasKey(i => i.idUsuario);
+            });
+
 
             OnModelCreatingPartial(modelBuilder);
         }
